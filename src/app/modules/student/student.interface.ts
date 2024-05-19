@@ -2,7 +2,7 @@ import { Schema, model, connect } from 'mongoose';
 
 export type UserName = {
     firstName: string;
-    middleName: string;
+    middleName?: string;
     lastName: string;
   };
   
