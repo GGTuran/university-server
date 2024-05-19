@@ -45,10 +45,9 @@ const localGuardianZodSchema = z.object({
 
 // Student Zod schema
 const studentZodSchema = z.object({
-    id: z.string()
-    ,
-    name: userNameZodSchema
-    ,
+    id: z.string(),
+    password:z.string(),
+    name: userNameZodSchema,
     gender: z.enum(['male', 'female'], {
         errorMap: () => ({ message: '{VALUE} is not valid' }),
     }),

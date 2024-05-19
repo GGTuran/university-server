@@ -1,4 +1,4 @@
-import { Schema, model, connect } from 'mongoose';
+import { Schema, model, connect, Model } from 'mongoose';
 
 export type UserName = {
     firstName: string;
@@ -24,6 +24,7 @@ export type UserName = {
   
   export type Student = {
     id: string;
+    password:string;
     name: UserName;
     gender: 'male' | 'female';
     dateOfBirth?: string;
@@ -38,3 +39,28 @@ export type UserName = {
     profileImg?: string;
     isActive: 'active' | 'blocked';
   };
+
+  //Custom static method
+  // export interface StudentMethodsStatic extends Model<Student>{
+  //   isUserExists(id:string) : Promise<Student | null>;
+  // } 
+
+
+
+
+
+
+
+
+
+  // custom instance method
+  
+  export type StudentMethodsInstance = {
+    isUserExists(id : string):Promise<Student | null>;
+  };
+
+  export type StudentInstanceModel = Model<
+  Student,
+  Record<string, never>,
+  StudentMethodsInstance
+  >;

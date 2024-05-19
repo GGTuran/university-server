@@ -1,6 +1,9 @@
 import { Schema, model, connect } from 'mongoose';
-import { Guardian, LocalGuardian, Student, UserName } from './student/student.interface';
+import { Guardian, LocalGuardian, Student,    StudentInstanceModel,    StudentMethodsInstance,    UserName } from './student/student.interface';
 import validator from 'validator';
+import bcrypt from 'bcrypt';
+import config from '../config';
+
 
 const userNameSchema = new Schema<UserName>({
     firstName: {
@@ -77,8 +80,12 @@ const guardianSchema = new Schema<Guardian>({
     },
   });
 
-const studentSchema = new Schema<Student>({
+// const studentSchema = new Schema<Student, StudentInstanceModel, StudentMethodsInstance>({
+//The line above is for custom instance method,we need to export those though
+
+const studentSchema = new Schema<Student,StudentInstanceModel,StudentMethodsInstance>({
     id: { type: String , required:true, unique:true },
+    password:{ type:String , required:[true,'Password is required']},
     name: {
       type:userNameSchema,
       required:[true, "User name must be given"],
@@ -136,4 +143,66 @@ const studentSchema = new Schema<Student>({
 
 });
 
-export const StudentModel = model<Student>('Student', studentSchema);
+
+//Using middlewares/hooks 
+
+//pre save middleware/hook : works on create(),save()
+
+studentSchema.pre('save', async function(next){
+  // console.log(this, 'Pre Hook: They are gonna save the data');
+  
+  const user = this;
+  //hashing the password before saving
+  user.password = await bcrypt.hash(
+    user.password, 
+    Number(config.bcrypt_salt_rounds),
+  );
+  next();
+
+});
+
+//Post save middleware/Hook 
+studentSchema.post('save', function(doc, next){
+  console.log(doc, 'Post Hook: They saved the data');
+  doc.password = '';
+  next();
+});
+
+//Query middleware
+studentSchema.pre('find', function(next){
+  console.log(this)
+})
+
+
+
+
+
+
+
+
+
+
+//Creating custom static method
+// studentSchema.statics.isUserExists = async function (id:string){
+//   const existingUser = await StudentModel.findOne({id});
+//   return existingUser;
+// }
+
+
+
+
+
+
+
+// creating custom instance method 
+studentSchema.methods.isUserExists = async function (id: string){
+  const existingUser = await StudentModel.findOne({ id });
+  return existingUser;
+}
+
+
+
+
+
+
+export const StudentModel = model<Student, StudentInstanceModel>('Student', studentSchema);
