@@ -74,6 +74,7 @@ const studentZodSchema = z.object({
     isActive: z.enum(['active', 'blocked'], {
         errorMap: () => ({ message: '{VALUE} is not valid' }),
     }).default('active'),
+    isDeleted:z.boolean(),
 });
 
 

@@ -3,6 +3,7 @@ import { Guardian, LocalGuardian, Student,    StudentInstanceModel,    StudentMe
 import validator from 'validator';
 import bcrypt from 'bcrypt';
 import config from '../config';
+import { boolean } from 'joi';
 
 
 const userNameSchema = new Schema<UserName>({
@@ -138,11 +139,26 @@ const studentSchema = new Schema<Student,StudentInstanceModel,StudentMethodsInst
         message:"{VALUE} is not valid"
       },
       default: 'active',
-    }
+    },
+    isDeleted:{ 
+      type:Boolean,
+      default: false,
+     },
 
 
-});
+},
+{
+  toJSON: {
+    virtuals:true,
+  }
+},
+);
 
+
+//Virtual 
+studentSchema.virtual('fullName').get(function(){
+  return `${this.name.firstName} ${this.name.middleName} ${this.name.lastName}` 
+})
 
 //Using middlewares/hooks 
 
@@ -170,9 +186,22 @@ studentSchema.post('save', function(doc, next){
 
 //Query middleware
 studentSchema.pre('find', function(next){
-  console.log(this)
-})
+  // console.log(this);
+  this.find({ isDeleted: { $ne : true} });
+  next()
+});
 
+studentSchema.pre('findOne', function(next){
+  // console.log(this);
+  this.find({ isDeleted: { $ne : true} });
+  next()
+});
+
+//aggregate 
+studentSchema.pre('aggregate', function(next){
+  this.pipeline().unshift({$match : { isDeleted : { $ne : true}}});
+  next();
+});
 
 
 
