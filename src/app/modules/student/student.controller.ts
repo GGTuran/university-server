@@ -9,13 +9,7 @@ import studentZodSchema from './studentValidationZod';
 const createStudent = async (req: Request, res: Response) => {
     try {
 
-
-
-
-
-
         const { student: studentData } = req.body;
-
 
         //validating using zod
         // const zodSchema = z.object({
@@ -44,9 +38,6 @@ const createStudent = async (req: Request, res: Response) => {
 
         //     });
         // }
-
-
-
 
 
         //send response

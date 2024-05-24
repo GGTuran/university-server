@@ -208,17 +208,11 @@ studentSchema.pre('aggregate', function(next){
 
 
 
-
-
-
 //Creating custom static method
 // studentSchema.statics.isUserExists = async function (id:string){
 //   const existingUser = await StudentModel.findOne({id});
 //   return existingUser;
 // }
-
-
-
 
 
 
@@ -235,3 +229,40 @@ studentSchema.methods.isUserExists = async function (id: string){
 
 
 export const StudentModel = model<Student, StudentInstanceModel>('Student', studentSchema);
+
+
+
+
+
+
+
+    // const product = await Product.findOneAndUpdate({
+    //     _id: payload.productId,
+    //     'inventory.quantity': { $gte: payload.quantity },
+    // },
+    //     [
+    //         {
+    //             $set: {
+    //                 'inventory.inStock': {
+    //                     $subtract: ['$inventory.quantity', payload.quantity],
+    //                 },
+    //             },
+    //         },
+    //         {
+    //             $set: {
+    //                 'inventory.inStock': {
+    //                     $cond: {
+    //                         if: { $eq: ['$inventory.quantity', 0] },
+    //                         then: false,
+    //                         else: '$inventory.inStock',
+    //                     },
+    //                 },
+    //             },
+    //         },
+    //     ],
+    //     { new: true },
+    // );
+
+    // if (!product) {
+    //     return { error: { success: false, message: 'Insufficient quantity available in stock' } }
+    // }

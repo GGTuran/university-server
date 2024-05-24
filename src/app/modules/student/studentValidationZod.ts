@@ -53,9 +53,9 @@ const studentZodSchema = z.object({
     }),
     dateOfBirth: z.string().optional(),
     email: z.string()
-        .email('Email is not a valid email address')
+        .email('Email is not a valid email address').nonempty('Email address should  be given')
     ,
-    contactNo: z.string()
+    contactNo: z.string().nonempty('Contact number should be given')
     ,
     emergencyContactNo: z.string()
     ,
