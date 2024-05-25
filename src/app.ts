@@ -4,6 +4,7 @@ import cors from 'cors';
 import { studentRoutes } from './app/modules/student/student.route';
 import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import notFoundError from './app/middlewares/notFoundError';
+import { UserRoutes } from './app/modules/user/user.route';
 const app: Application = express();
 // const port = 3000
 
@@ -15,6 +16,7 @@ app.use(cors());
 //applications route
 
 app.use('/api/v1/students', studentRoutes);
+app.use('/api/v1/users', UserRoutes);
 
 
 //global error handler

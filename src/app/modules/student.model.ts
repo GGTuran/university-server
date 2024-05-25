@@ -86,6 +86,7 @@ const guardianSchema = new Schema<Guardian>({
 
 const studentSchema = new Schema<Student,StudentInstanceModel,StudentMethodsInstance>({
     id: { type: String , required:true, unique:true },
+    user:{ type: Schema.Types.ObjectId, required:[true, 'User id is required'], unique:true, ref:'User',},
     password:{ type:String , required:[true,'Password is required']},
     name: {
       type:userNameSchema,
@@ -132,14 +133,14 @@ const studentSchema = new Schema<Student,StudentInstanceModel,StudentMethodsInst
       required:[true, "Local guardian's data should be given"]
     },
     profileImg: { type:String},
-    isActive:{
-      type:String,
-      enum:{
-        values:['active' ,'blocked'],
-        message:"{VALUE} is not valid"
-      },
-      default: 'active',
-    },
+    // isActive:{
+    //   type:String,
+    //   enum:{
+    //     values:['active' ,'blocked'],
+    //     message:"{VALUE} is not valid"
+    //   },
+    //   default: 'active',
+    // },
     isDeleted:{ 
       type:Boolean,
       default: false,

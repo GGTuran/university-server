@@ -1,26 +1,26 @@
 import { StudentModel } from "../student.model";
 import { Student } from "./student.interface";
 
-const createStudentIntoDB  = async (student: Student) =>{
+// const createStudentIntoDB  = async (student: Student) =>{
    
-    // const result = await StudentModel.create(student);   //built-in mongoose static method
-    //using custom static method
-    // if(await StudentModel.isUserExists(student.id)){
-    //     throw new Error('User Already exists!!')
-    // }
+//     // const result = await StudentModel.create(student);   //built-in mongoose static method
+//     //using custom static method
+//     // if(await StudentModel.isUserExists(student.id)){
+//     //     throw new Error('User Already exists!!')
+//     // }
    
-    //using mongoose built-in instance method now
+//     //using mongoose built-in instance method now
     
-    const studentInstance = new StudentModel(student); //created instance
-    // custom instance method
-    if(await studentInstance.isUserExists(student.id)){
-        throw new Error ('User already exists!!');
-    };
+//     const studentInstance = new StudentModel(student); //created instance
+//     // custom instance method
+//     if(await studentInstance.isUserExists(student.id)){
+//         throw new Error ('User already exists!!');
+//     };
 
-    const result = await studentInstance.save()  //creating instance
+//     const result = await studentInstance.save()  //creating instance
 
-    return result;
-} 
+//     return result;
+// } 
 const getAllStudentsFromDB = async () =>{
     const result = await StudentModel.find();
     return result;
@@ -38,7 +38,7 @@ const deleteStudentFromDB = async ( id : string ) =>{
 }
 
 export const studentServices ={
-    createStudentIntoDB,
+    // createStudentIntoDB,
     getAllStudentsFromDB,
     getSingleStudentFromDB,
     deleteStudentFromDB,
