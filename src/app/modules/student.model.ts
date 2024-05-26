@@ -1,9 +1,9 @@
 import { Schema, model, connect } from 'mongoose';
 import { Guardian, LocalGuardian, Student,    StudentInstanceModel,    StudentMethodsInstance,    UserName } from './student/student.interface';
 import validator from 'validator';
-import bcrypt from 'bcrypt';
-import config from '../config';
-import { boolean } from 'joi';
+
+// import config from '../config';
+// import { boolean } from 'joi';
 
 
 const userNameSchema = new Schema<UserName>({
@@ -87,7 +87,7 @@ const guardianSchema = new Schema<Guardian>({
 const studentSchema = new Schema<Student,StudentInstanceModel,StudentMethodsInstance>({
     id: { type: String , required:true, unique:true },
     user:{ type: Schema.Types.ObjectId, required:[true, 'User id is required'], unique:true, ref:'User',},
-    password:{ type:String , required:[true,'Password is required']},
+    // password:{ type:String , required:[true,'Password is required']},
     name: {
       type:userNameSchema,
       required:[true, "User name must be given"],
@@ -165,25 +165,7 @@ studentSchema.virtual('fullName').get(function(){
 
 //pre save middleware/hook : works on create(),save()
 
-studentSchema.pre('save', async function(next){
-  // console.log(this, 'Pre Hook: They are gonna save the data');
-  
-  const user = this;
-  //hashing the password before saving
-  user.password = await bcrypt.hash(
-    user.password, 
-    Number(config.bcrypt_salt_rounds),
-  );
-  next();
 
-});
-
-//Post save middleware/Hook 
-studentSchema.post('save', function(doc, next){
-  console.log(doc, 'Post Hook: They saved the data');
-  doc.password = '';
-  next();
-});
 
 //Query middleware
 studentSchema.pre('find', function(next){

@@ -44,38 +44,39 @@ const localGuardianZodSchema = z.object({
 });
 
 // Student Zod schema
-const studentZodSchema = z.object({
-    id: z.string(),
-    password:z.string(),
-    name: userNameZodSchema,
-    gender: z.enum(['male', 'female'], {
-        errorMap: () => ({ message: '{VALUE} is not valid' }),
+export const createStudentZodSchema = z.object({
+    body: z.object({
+        password: z.string(),
+        student: z.object({
+            name: userNameZodSchema,
+            gender: z.enum(['male', 'female'], {
+                errorMap: () => ({ message: '{VALUE} is not valid' }),
+            }),
+            dateOfBirth: z.string().optional(),
+            email: z.string()
+                .email('Email is not a valid email address')
+            ,
+            contactNo: z.string()
+            ,
+            emergencyContactNo: z.string()
+            ,
+            bloodGroup: z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'], {
+                errorMap: () => ({ message: '{VALUE} is not valid' }),
+            }).optional(),
+            presentAddress: z.string()
+            ,
+            permanentAddress: z.string()
+            ,
+            guardian: guardianZodSchema
+            ,
+            localGuardian: localGuardianZodSchema
+            ,
+            profileImg: z.string().optional(),
+        }),
     }),
-    dateOfBirth: z.string().optional(),
-    email: z.string()
-        .email('Email is not a valid email address').nonempty('Email address should  be given')
-    ,
-    contactNo: z.string().nonempty('Contact number should be given')
-    ,
-    emergencyContactNo: z.string()
-    ,
-    bloodGroup: z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'], {
-        errorMap: () => ({ message: '{VALUE} is not valid' }),
-    }).optional(),
-    presentAddress: z.string()
-    ,
-    permanentAddress: z.string()
-    ,
-    guardian: guardianZodSchema
-    ,
-    localGuardian: localGuardianZodSchema
-    ,
-    profileImg: z.string().optional(),
-    isActive: z.enum(['active', 'blocked'], {
-        errorMap: () => ({ message: '{VALUE} is not valid' }),
-    }).default('active'),
-    isDeleted:z.boolean(),
+
 });
 
-
-export default studentZodSchema;
+// export const studentZod = {
+//      createStudentZodSchema
+// };
