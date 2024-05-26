@@ -101,7 +101,7 @@ const studentSchema = new Schema<Student,StudentInstanceModel,StudentMethodsInst
       },
       required:[true, "Should let us know the gender"]
     },
-    dateOfBirth:{type: String},
+    dateOfBirth:{type: Date},
     email:{
       type: String, 
       required: [true, 'email is undefined'],

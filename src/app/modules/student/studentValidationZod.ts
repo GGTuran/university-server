@@ -52,7 +52,7 @@ export const createStudentZodSchema = z.object({
             gender: z.enum(['male', 'female'], {
                 errorMap: () => ({ message: '{VALUE} is not valid' }),
             }),
-            dateOfBirth: z.string().optional(),
+            dateOfBirth: z.date().optional(),
             email: z.string()
                 .email('Email is not a valid email address')
             ,
