@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { studentServices } from "./studentService";
 // import studentJoiSchema from './student.validationJoi';
 import { z } from "zod";
-import studentZodSchema from './studentValidationZod';
+// import studentZodSchema from './studentValidationZod';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';

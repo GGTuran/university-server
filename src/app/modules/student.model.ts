@@ -133,6 +133,10 @@ const studentSchema = new Schema<Student,StudentInstanceModel,StudentMethodsInst
       required:[true, "Local guardian's data should be given"]
     },
     profileImg: { type:String},
+    admissionSemester: {
+      type:Schema.Types.ObjectId,
+      ref:'AcademicSemester',
+    },
     // isActive:{
     //   type:String,
     //   enum:{
