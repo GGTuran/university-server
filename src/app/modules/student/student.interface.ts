@@ -39,6 +39,7 @@ export type UserName = {
     localGuardian: LocalGuardian;
     profileImg?: string;
     admissionSemester:Types.ObjectId;
+    academicDepartment:Types.ObjectId;
     // isActive: 'active' | 'blocked';
     isDeleted:boolean;
   };

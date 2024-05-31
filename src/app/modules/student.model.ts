@@ -137,6 +137,10 @@ const studentSchema = new Schema<Student,StudentInstanceModel,StudentMethodsInst
       type:Schema.Types.ObjectId,
       ref:'AcademicSemester',
     },
+    academicDepartment:{
+      type:Schema.Types.ObjectId,
+      ref:'AcademicDepartment',
+    },
     // isActive:{
     //   type:String,
     //   enum:{
