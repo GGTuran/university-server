@@ -70,7 +70,10 @@ const updateSingleStudentIntoDB = async(id:string, payload:Partial<Student>)=>{
     }
 
     // const {  }
-    const result = await StudentModel.findOneAndUpdate({id}, modifiedUpdatedData, {new:true});
+    const result = await StudentModel.findOneAndUpdate({id}, modifiedUpdatedData, {
+        new:true,
+        runValidators:true,
+    });
     return result;
     };
 
@@ -109,4 +112,5 @@ export const studentServices ={
     getAllStudentsFromDB,
     getSingleStudentFromDB,
     deleteStudentFromDB,
+    updateSingleStudentIntoDB,
 }
