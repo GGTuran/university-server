@@ -18,7 +18,7 @@ async function main() {
 main();
 
 process.on('unhandledRejection', () =>{
-  console.log(`😈 UnhandledRejection is detected,shutting down.....`);
+  console.log(`UnhandledRejection is detected,shutting down.....`);
   if(server){
     server.close(() =>{
       process.exit(1);
@@ -33,4 +33,4 @@ process.on('uncaughtException',()=>{
   process.exit(1);
 });
 
-console.log(config.port, config.database_url);
+// console.log(config.port, config.database_url);
