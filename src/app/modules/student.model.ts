@@ -166,7 +166,7 @@ const studentSchema = new Schema<Student,StudentInstanceModel,StudentMethodsInst
 
 //Virtual 
 studentSchema.virtual('fullName').get(function(){
-  return `${this.name.firstName} ${this.name.middleName} ${this.name.lastName}` 
+  return `${this?.name?.firstName} ${this?.name?.middleName} ${this?.name?.lastName}` 
 })
 
 //Using middlewares/hooks 

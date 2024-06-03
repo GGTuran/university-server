@@ -4,6 +4,8 @@ import { Student } from "./student.interface";
 import AppError from "../../errors/AppError";
 import httpStatus from "http-status";
 import { User } from "../user/user.model";
+import QueryBuilder from "../../builder/QueryBuilder";
+import { studentSearchableFields } from "./studentConstants";
 
 // const createStudentIntoDB  = async (student: Student) =>{
    
@@ -29,14 +31,14 @@ import { User } from "../user/user.model";
 
 const getAllStudentsFromDB = async (query:Record<string, unknown>) =>{
 
-    const queryObject = {...query};  //copy query
+    // const queryObject = {...query};  //copy query
 
-    const studentSearchableFields = ['email', 'name.firstName', 'presentAddress'];
-    let searchTerm = '';
-    // if searchTerm is  given
-    if(query?.searchTerm){
-        searchTerm = query?.searchTerm as string;
-    }
+    // const studentSearchableFields = ['email', 'name.firstName', 'presentAddress'];
+    // let searchTerm = '';
+    // // if searchTerm is  given
+    // if(query?.searchTerm){
+    //     searchTerm = query?.searchTerm as string;
+    // }
 
     //raw searching
     //dynamically doing it by using map
@@ -58,17 +60,17 @@ const getAllStudentsFromDB = async (query:Record<string, unknown>) =>{
 
 
 
-    const searchQuery =  StudentModel.find({                                                                
-        $or:studentSearchableFields.map((field)=>
-            ({
-                [field]:{$regex:searchTerm, $options:'i'},
-            })
-    )
-    })
+    // const searchQuery =  StudentModel.find({                                                                
+    //     $or:studentSearchableFields.map((field)=>
+    //         ({
+    //             [field]:{$regex:searchTerm, $options:'i'},
+    //         })
+    // )
+    // })
     
-    const excludeFields = ['searchTerm','sort','limit'];
+    // const excludeFields = ['searchTerm','sort','limit','page','fields'];
     
-    excludeFields.forEach(elem => delete queryObject[elem]);
+    // excludeFields.forEach(elem => delete queryObject[elem]);
     
     //field filtering
 //     const result = await searchQuery.find(queryObject).populate('admissionSemester').populate({
@@ -80,32 +82,76 @@ const getAllStudentsFromDB = async (query:Record<string, unknown>) =>{
 //     return result;
 // }
 
-const filterQuery =  searchQuery.find(queryObject).populate('admissionSemester').populate({
-    path:'academicDepartment',
-    populate:{
-        path:'academicFaculty',
-    },
-});
+// const filterQuery =  searchQuery.find(queryObject).populate('admissionSemester').populate({
+//     path:'academicDepartment',
+//     populate:{
+//         path:'academicFaculty',
+//     },
+// });
 
 //sorting
-let sort = '-createdAt';
+// let sort = '-createdAt';
 
-if(query.sort){
-    sort = query.sort as string;
-}
-const sortQuery =  filterQuery.sort(sort);
+// if(query.sort){
+//     sort = query.sort as string;
+// }
+// const sortQuery =  filterQuery.sort(sort);
 
 //limiting
-let limit = 1;
-if(query.limit){
-    limit = query.limit;
-}
+//pagination functionality
+// let page = 1;
+// let limit = 1;
+// let skip = 0;
 
-const limitQuery = await sortQuery.limit(limit);
+// //if limit is given 
+// if(query.limit){
+//     limit = Number(query.limit);
+// }
+// //if page is given
+// if(query.page){
+//     page = Number(query.page);
+//     skip = (page - 1) * limit;
+// }
+
+// const paginateQuery = sortQuery.skip(skip);
+
+// const limitQuery =  paginateQuery.limit(limit);
+
+// //field limiting
+// let fields = '-__v';
+
+// if(query.fields){
+//     fields = (query.fields as string).split(',').join(' ');
+// }
+
+// const fieldQuery = await limitQuery.select(fields);
 
 
-return limitQuery;
-}
+// return fieldQuery;
+
+
+
+const studentQuery = new QueryBuilder(
+    StudentModel.find()
+    .populate('admissionSemester').populate({
+        path:'academicDepartment',
+        populate:{
+            path:'academicFaculty',
+        },
+    }),
+    query
+) 
+.search(studentSearchableFields)
+.filter()
+.sort()
+.paginate()
+.fields();
+
+const result = await studentQuery.modelQuery;
+return result;
+
+
+};
 
 const getSingleStudentFromDB = async (id : string) =>{
     // const result = await StudentModel.findOne({id});
