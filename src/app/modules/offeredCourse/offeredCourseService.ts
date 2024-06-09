@@ -61,7 +61,7 @@ const createOfferedCourseIntoDB = async(payload:TOfferedCourse)=>{
         course,
         section,
     });
-    if(!isSameCourseWithSameRegistration){
+    if(isSameCourseWithSameRegistration){
         throw new AppError(httpStatus.BAD_REQUEST,'Offered course with same section already exists!');
     }
 
