@@ -6,12 +6,16 @@ import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import notFoundError from './app/middlewares/notFoundError';
 import { UserRoutes } from './app/modules/user/user.route';
 import router from './app/routes';
+import  cookieParser from 'cookie-parser';
+
+
 const app: Application = express();
 // const port = 3000
 
 //Parsers
 app.use(express.json());
-app.use(cors());
+app.use(cors({origin:['http://localhost:5173']}));
+app.use(cookieParser());
 
 
 //applications route

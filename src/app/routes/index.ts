@@ -55,7 +55,7 @@ const moduleRoutes = [
         route:OfferedCourseRoutes,
     },
     {
-        path:'auth',
+        path:'/auth',
         route:AuthRoutes,
     },
 ];
