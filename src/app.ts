@@ -25,16 +25,15 @@ app.use(cookieParser());
 app.use('/api/v1',router)
 
 
+app.get('/', (req: Request, res: Response) => {
+  // const a = 10;
+  res.send('University Server');
+});
+
 //global error handler
 app.use(globalErrorHandler);
 
 //not found error
 app.use(notFoundError);
-
-
-app.get('/', (req: Request, res: Response) => {
-  const a = 10;
-  res.send(a);
-});
 
 export default app;
