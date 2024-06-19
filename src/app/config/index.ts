@@ -14,4 +14,5 @@ export default {
   jwt_access_expires_id:process.env.JWT_ACCESS_EXPIRES_IN,
   jwt_refresh_expires_in:process.env.JWT_REFRESH_EXPIRES_IN ,
   reset_pass_ui_link:process.env.RESET_PASS_UI_LINK,
+  app_pass:process.env.APP_PASS,
 };

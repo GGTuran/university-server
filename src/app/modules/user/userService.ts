@@ -182,22 +182,26 @@ const createAdminIntoDb = async (password: string, payload: TAdmin) => {
     };
 };
 
-const getMeFromDB = async(token:string)=>{
-    const decoded = verifyToken(token, config.JWT_ACCESS_SECRET as string);
-    const { userId, role } = decoded;
+const getMeFromDB = async(userId:string, role:string)=>{
+   
 
     let result = null;
 
     if(role === 'student'){
-        result = await StudentModel.findOne({ id: userId });
+        result = await StudentModel.findOne({ id: userId }).populate('user');;
     }
     if(role === 'admin'){
-        result = await Admin.findOne({ id: userId });
+        result = await Admin.findOne({ id: userId }).populate('user');;
     };
     if(role === 'faculty'){
-        result = await Faculty.findOne({ id: userId });
+        result = await Faculty.findOne({ id: userId }).populate('user');
     };
 
+    return result;
+};
+
+const changeStatusIntoDB = async(id:string, payload:{status:string})=>{
+    const result = await User.findByIdAndUpdate(id,payload,{new:true});
     return result;
 }
 
@@ -207,4 +211,5 @@ export const UserService = {
     createFacultyIntoDB,
     createAdminIntoDb,
     getMeFromDB,
+    changeStatusIntoDB,
 }

@@ -45,12 +45,14 @@ const createAdmin = catchAsync(async (req, res) => {
   });
 
   const getMe = catchAsync(async(req,res)=>{
-    const token = req.headers.authorization;
-    if(!token){
-        throw new AppError(httpStatus.NOT_FOUND,'You have no access!!')
-    };
+    // const token = req.headers.authorization;
+    // if(!token){
+    //     throw new AppError(httpStatus.NOT_FOUND,'You have no access!!')
+    // };
 
-    const result = await UserService.getMeFromDB(token);
+    // console.log(req.user)
+    const { userId,role } = req.user;
+    const result : any = await UserService.getMeFromDB(userId,role);
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
@@ -60,9 +62,22 @@ const createAdmin = catchAsync(async (req, res) => {
 
   });
 
+  const changeStatus = catchAsync(async(req,res)=>{
+    const id = req.params.id;
+
+    const result = await UserService.changeStatusIntoDB(id,req.body);
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'User status is updated successfully',
+        data: result,
+      });
+  })
+
 export const userController = {
     createStudent,
     createFaculty,
     createAdmin,
     getMe,
+    changeStatus,
 };
