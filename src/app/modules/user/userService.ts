@@ -1,4 +1,4 @@
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import mongoose from "mongoose";
 import config from "../../config";
 import { AcademicSemester } from "../academicSemester/academicSemester.model";
@@ -15,8 +15,9 @@ import { Faculty } from "../faculty/faculty.model";
 import { TAdmin } from "../admin/admin.interface";
 import { Admin } from "../admin/admin.model";
 import { verifyToken } from "../auth/auth.utils";
+import { sendImageToCloudinary } from "../../utils/imageToCloud";
 
-const createUserIntoDb = async (password: string, payload: Student) => {
+const createUserIntoDb = async (file:any, password: string, payload: Student) => {
     //create a user object
     const userData: Partial<TUser> = {};
 
@@ -31,7 +32,7 @@ const createUserIntoDb = async (password: string, payload: Student) => {
 
     //find academic semester info
     const admissionSemester = await AcademicSemester.findById(payload.admissionSemester);
-
+    // console.log(admissionSemester,'semester')
     if (!admissionSemester) {
         throw new Error('Admission semester not found');
     }
@@ -42,6 +43,19 @@ const createUserIntoDb = async (password: string, payload: Student) => {
         session.startTransaction()
         //generate id
         userData.id = await generateStudentId(admissionSemester);
+
+        //path and name for image
+        const imageName = `${userData.id}${payload?.name?.firstName}`;
+        const path = file?.path;
+        // if(!path){
+        //     throw new Error('File path is undefined')
+        // }
+        console.log(file,'file')
+        console.log(path,'path');
+
+        //send image to cloudinary
+        const { secure_url }:any = await sendImageToCloudinary(imageName, path);
+        console.log(secure_url, 'secure-url');
 
         //create a user(transaction-1)
         const newUser = await User.create([userData], { session });
@@ -55,6 +69,8 @@ const createUserIntoDb = async (password: string, payload: Student) => {
         //set id , _id as user
         payload.id = newUser[0].id;
         payload.user = newUser[0]._id;  // reference
+        //set profileImg
+        payload.profileImg = secure_url;
 
         //create a student(transaction-2)
         const newStudent = await StudentModel.create([payload], { session });

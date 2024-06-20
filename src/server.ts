@@ -17,20 +17,20 @@ async function main() {
 }
 main();
 
-process.on('unhandledRejection', () =>{
-  console.log(`UnhandledRejection is detected,shutting down.....`);
-  if(server){
-    server.close(() =>{
-      process.exit(1);
-    });
-  }
-  process.exit(1);
-});
+// process.on('unhandledRejection', () =>{
+//   console.log(`UnhandledRejection is detected,shutting down.....`);
+//   if(server){
+//     server.close(() =>{
+//       process.exit(1);
+//     });
+//   }
+//   process.exit(1);
+// });
 
 
-process.on('uncaughtException',()=>{
-  console.log(`uncaughtexception is detected,shutting down.......`);
-  process.exit(1);
-});
+// process.on('uncaughtException',()=>{
+//   console.log(`uncaughtexception is detected,shutting down.......`);
+//   process.exit(1);
+// });
 
 // console.log(config.port, config.database_url);
