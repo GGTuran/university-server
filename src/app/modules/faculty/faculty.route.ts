@@ -6,7 +6,7 @@ import auth from '../../middlewares/auth';
 
 const router = express.Router();
 
-router.get('/', auth(), FacultyControllers.getAllFaculty);
+router.get('/', auth('admin','faculty','student'), FacultyControllers.getAllFaculty);
 
 router.get('/:id', FacultyControllers.getSingleFaculty);
 

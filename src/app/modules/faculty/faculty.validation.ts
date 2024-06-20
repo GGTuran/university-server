@@ -28,7 +28,7 @@ const createUserNameValidationSchema = z.object({
         presentAddress: z.string(),
         permanentAddress: z.string(),
         academicDepartment: z.string(),
-        profileImg: z.string(),
+        // profileImg: z.string(),
       }),
     }),
   });
