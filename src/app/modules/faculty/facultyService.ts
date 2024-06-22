@@ -7,7 +7,7 @@ import AppError from "../../errors/AppError";
 import httpStatus from "http-status";
 import { User } from "../user/user.model";
 
-const getAllFacultiesfromDB = async (query:Record<string, unknown>) =>{
+const getAllFacultiesFromDB = async (query:Record<string, unknown>) =>{
     const facultyQuery = new QueryBuilder(
         Faculty.find().populate('academicDepartment'),
         query
@@ -88,7 +88,7 @@ const deleteFacultyFromDB = async (id: string) => {
   };
 
   export const FacultyServices = {
-    getAllFacultiesfromDB,
+    getAllFacultiesFromDB,
     getSingleFacultyFromDB,
     updateFacultyIntoDB,
     deleteFacultyFromDB,

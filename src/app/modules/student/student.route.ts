@@ -3,23 +3,32 @@ import { studentControllers } from './student.controller';
 import validate from '../../middlewares/validate';
 import { updateStudentZodSchema } from './studentValidationZod';
 import auth from '../../middlewares/auth';
+import { USER_ROLE } from '../user/user.constatant';
 
 const router = express.Router();
 
 //will call controller function
 // router.post('/create-student', studentControllers.createStudent);
 
-router.get('/', studentControllers.getAllStudents);
+router.get(
+    '/',
+    auth(USER_ROLE.superAdmin, USER_ROLE.admin),
+    studentControllers.getAllStudents);
 
 router.get(
     '/:studentId',
-    auth('admin', 'faculty', 'student'),
-     studentControllers.getSingleStudent);
+    auth(USER_ROLE.superAdmin, USER_ROLE.admin, USER_ROLE.faculty),
+    studentControllers.getSingleStudent);
 
-router.patch('/:studentId',
-validate(updateStudentZodSchema),
- studentControllers.updateStudent);
+router.patch(
+    '/:studentId',
+    auth(USER_ROLE.superAdmin, USER_ROLE.admin),
+    validate(updateStudentZodSchema),
+    studentControllers.updateStudent);
 
-router.delete('/:studentId', studentControllers.deleteStudent);
+router.delete(
+    '/:studentId',
+    auth(USER_ROLE.superAdmin, USER_ROLE.admin),
+    studentControllers.deleteStudent);
 
-export const studentRoutes =router;
+export const studentRoutes = router;

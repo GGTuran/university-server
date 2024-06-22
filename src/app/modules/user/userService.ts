@@ -37,6 +37,13 @@ const createUserIntoDb = async (file: any, password: string, payload: TStudent) 
         throw new Error('Admission semester not found');
     }
 
+    //finding department 
+    const academicDepartment = await AcademicDepartment.findById(payload.academicDepartment);
+    if (!academicDepartment) {
+        throw new AppError(httpStatus.NOT_FOUND, 'Academic department not found');
+    }
+    payload.academicFaculty = academicDepartment.academicFaculty;
+
     const session = await mongoose.startSession();
 
     try {
@@ -44,18 +51,17 @@ const createUserIntoDb = async (file: any, password: string, payload: TStudent) 
         //generate id
         userData.id = await generateStudentId(admissionSemester);
 
-        //path and name for image
-        const imageName = `${userData.id}${payload?.name?.firstName}`;
-        const path = file?.path;
-        // if(!path){
-        //     throw new Error('File path is undefined')
-        // }
-        console.log(file, 'file')
-        console.log(path, 'path');
+        if (file) {
+            //path and name for image
+            const imageName = `${userData.id}${payload?.name?.firstName}`;
+            const path = file?.path;
+            //send image to cloudinary
+            const { secure_url } = await sendImageToCloudinary(imageName, path);
+            //set profileImg
+            payload.profileImg = secure_url as string;
+        }
 
-        //send image to cloudinary
-        const { secure_url }: any = await sendImageToCloudinary(imageName, path);
-        console.log(secure_url, 'secure-url');
+
 
         //create a user(transaction-1)
         const newUser = await User.create([userData], { session });
@@ -69,8 +75,6 @@ const createUserIntoDb = async (file: any, password: string, payload: TStudent) 
         //set id , _id as user
         payload.id = newUser[0].id;
         payload.user = newUser[0]._id;  // reference
-        //set profileImg
-        payload.profileImg = secure_url;
 
         //create a student(transaction-2)
         const newStudent = await Student.create([payload], { session });
@@ -95,7 +99,7 @@ const createUserIntoDb = async (file: any, password: string, payload: TStudent) 
 
 
 
-const createFacultyIntoDB = async (file:any ,password: string, payload: TFaculty) => {
+const createFacultyIntoDB = async (file: any, password: string, payload: TFaculty) => {
     //create a user object
     const userData: Partial<TUser> = {};
 
@@ -114,25 +118,23 @@ const createFacultyIntoDB = async (file:any ,password: string, payload: TFaculty
         throw new AppError(400, 'Academic department is not found');
     }
 
+    payload.academicFaculty = academicDepartment.academicFaculty;
+
     const session = await mongoose.startSession();
 
     try {
         session.startTransaction();
         //set generated id
         userData.id = await generateFacultyId();
-
-        
-        //path and name for image
-        const imageName = `${userData.id}${payload?.name?.firstName}`;
-        const path = file?.path;
-        // if(!path){
-        //     throw new Error('File path is undefined')
-        // }
-        console.log(file, 'file')
-        console.log(path, 'path');
-
-        //send image to cloudinary
-        const { secure_url }: any = await sendImageToCloudinary(imageName, path);
+        if (file) {
+            //path and name for image
+            const imageName = `${userData.id}${payload?.name?.firstName}`;
+            const path = file?.path;
+            //send image to cloudinary
+            const { secure_url }:any = await sendImageToCloudinary(imageName, path);
+            //set profileImg
+            payload.profileImg = secure_url;
+        }
 
         //create a user(transaction-1)
         const newUser = await User.create([userData], { session });
@@ -145,7 +147,7 @@ const createFacultyIntoDB = async (file:any ,password: string, payload: TFaculty
         //set id, _id as user
         payload.id = newUser[0].id;
         payload.user = newUser[0]._id;
-        payload.profileImg = secure_url;
+     
 
         //cerate a faculty(transaction-2)
         const newFaculty = await Faculty.create([payload], { session });
@@ -165,7 +167,7 @@ const createFacultyIntoDB = async (file:any ,password: string, payload: TFaculty
     }
 };
 
-const createAdminIntoDb = async (file:any ,password: string, payload: TAdmin) => {
+const createAdminIntoDb = async (file: any, password: string, payload: TAdmin) => {
     //create a user object
     const userData: Partial<TUser> = {};
 
@@ -182,19 +184,15 @@ const createAdminIntoDb = async (file:any ,password: string, payload: TAdmin) =>
         session.startTransaction();
         //set  generated id
         userData.id = await generateAdminId();
-
-        
-        //path and name for image
-        const imageName = `${userData.id}${payload?.name?.firstName}`;
-        const path = file?.path;
-        // if(!path){
-        //     throw new Error('File path is undefined')
-        // }
-        console.log(file, 'file')
-        console.log(path, 'path');
-
-        //send image to cloudinary
-        const { secure_url }: any = await sendImageToCloudinary(imageName, path);
+        if (file) {
+            //path and name for image
+            const imageName = `${userData.id}${payload?.name?.firstName}`;
+            const path = file?.path;
+            //send image to cloudinary
+            const { secure_url }:any = await sendImageToCloudinary(imageName, path);
+            //set profileImg
+            payload.profileImg = secure_url;
+        }
 
         // create a user (transaction-1)
         const newUser = await User.create([userData], { session });
@@ -206,7 +204,6 @@ const createAdminIntoDb = async (file:any ,password: string, payload: TAdmin) =>
         // set id , _id as user
         payload.id = newUser[0].id;
         payload.user = newUser[0]._id; //reference _id
-        payload.profileImg = secure_url;
 
         // create a admin (transaction-2)
         const newAdmin = await Admin.create([payload], { session });

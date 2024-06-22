@@ -1,4 +1,4 @@
-import { v2 as cloudinary } from 'cloudinary';
+import { UploadApiResponse, v2 as cloudinary } from 'cloudinary';
 import config from '../config';
 import multer from 'multer';
 import fs from 'fs';
@@ -12,16 +12,16 @@ cloudinary.config({
 
 
 
-export const sendImageToCloudinary = (imageName: string, path: string) => {
+export const sendImageToCloudinary = (imageName: string, path: string): Promise<Record<string,unknown>> => {
 
 return new Promise((resolve, reject) =>{
-    if (!path) {
-        console.error('Error: Path is undefined');
-        return reject(new Error('Path is undefined'));
-    }
+    // if (!path) {
+    //     console.error('Error: Path is undefined');
+    //     return reject(new Error('Path is undefined'));
+    // }
 
-    console.log('Uploading image:', imageName);
-    console.log('Image path:', path);
+    // console.log('Uploading image:', imageName);
+    // console.log('Image path:', path);
     cloudinary.uploader
     .upload(
         path,
@@ -30,7 +30,7 @@ return new Promise((resolve, reject) =>{
             if(error){
                 reject(error);
             }
-            resolve(result);
+            resolve(result as UploadApiResponse);
             //deleting a file asynchronously
             fs.unlink(path, (err) =>{
                 if(err){

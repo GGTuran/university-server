@@ -8,12 +8,12 @@ const userSchema = new Schema<TUser, UserModel>(
     id: {
       type: String,
       required: true,
-      unique:true,
+      unique: true,
     },
     email: {
       type: String,
       required: true,
-      unique:true,
+      unique: true,
     },
     password: {
       type: String,
@@ -29,7 +29,7 @@ const userSchema = new Schema<TUser, UserModel>(
     },
     role: {
       type: String,
-      enum: ['student', 'faculty', 'admin'],
+      enum: ['superAdmin', 'student', 'faculty', 'admin'],
     },
     status: {
       type: String,

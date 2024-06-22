@@ -76,7 +76,7 @@ const userNameSchema = new Schema<TUserName>({
         type: String,
         required: [true, 'Permanent address is required'],
       },
-      // profileImg: { type: String },
+      profileImg: { type: String, default:'' },
       isDeleted: {
         type: Boolean,
         default: false,
