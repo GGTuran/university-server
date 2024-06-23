@@ -20,7 +20,7 @@ import { sendImageToCloudinary } from "../../utils/imageToCloud";
 const createUserIntoDb = async (file: any, password: string, payload: TStudent) => {
     //create a user object
     const userData: Partial<TUser> = {};
-
+    console.log(file);
 
     //if password is not given
     userData.password = password || (config.default_password as string);
@@ -59,12 +59,14 @@ const createUserIntoDb = async (file: any, password: string, payload: TStudent) 
             const { secure_url } = await sendImageToCloudinary(imageName, path);
             //set profileImg
             payload.profileImg = secure_url as string;
+            console.log(secure_url)
         }
-
+        
 
 
         //create a user(transaction-1)
         const newUser = await User.create([userData], { session });
+        console.log(userData);
 
 
         //create a student
@@ -78,6 +80,7 @@ const createUserIntoDb = async (file: any, password: string, payload: TStudent) 
 
         //create a student(transaction-2)
         const newStudent = await Student.create([payload], { session });
+        console.log(newStudent,payload,'payload')
 
         if (!newStudent.length) {
             throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create a student')

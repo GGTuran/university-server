@@ -43,6 +43,12 @@ router.delete(
     auth(USER_ROLE.superAdmin, USER_ROLE.admin),
     validate(courseValidations.facultiesWithCourseValidationSchema),
     CourseControllers.removeFacultiesFromCourse
+);
+
+router.get(
+    '/:courseId/get-faculties',
+    auth(USER_ROLE.superAdmin, USER_ROLE.admin, USER_ROLE.faculty, USER_ROLE.student),
+    CourseControllers.getFacultiesFromCourse
 )
 
 router.delete(

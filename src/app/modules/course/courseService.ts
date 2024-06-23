@@ -46,8 +46,8 @@ const updateCourseIntoDB = async (id: string, payload: Partial<TCourse>) => {
             { new: true, runValidators: true, session }
         );
 
-        if(!updateBasicCourseInfo){
-            throw new AppError(httpStatus.BAD_REQUEST,'Failed to update course!!')
+        if (!updateBasicCourseInfo) {
+            throw new AppError(httpStatus.BAD_REQUEST, 'Failed to update course!!')
         }
 
 
@@ -59,14 +59,14 @@ const updateCourseIntoDB = async (id: string, payload: Partial<TCourse>) => {
             const deletePreRequisiteCourses = await Course.findByIdAndUpdate(id, {
                 $pull: { preRequisiteCourses: { course: { $in: deletePreRequisites } } }
             },
-            {
-                new:true, runValidators:true, session
-            }
-        );
+                {
+                    new: true, runValidators: true, session
+                }
+            );
 
-        if(!deletePreRequisiteCourses){
-            throw new AppError(httpStatus.BAD_REQUEST, 'Failed to update course!!')
-        }
+            if (!deletePreRequisiteCourses) {
+                throw new AppError(httpStatus.BAD_REQUEST, 'Failed to update course!!')
+            }
             //checking again to filter out the new course fields
             const newPreRequisites = preRequisiteCourses?.filter(
                 (elem) => elem.course && !elem.isDeleted,
@@ -75,12 +75,12 @@ const updateCourseIntoDB = async (id: string, payload: Partial<TCourse>) => {
             const newPreRequisiteCourses = await Course.findByIdAndUpdate(id, {
                 $addToSet: { preRequisiteCourses: { $each: newPreRequisites } }
             },
-            {new:true, runValidators:true, session}
-        );
+                { new: true, runValidators: true, session }
+            );
 
-        if(!newPreRequisiteCourses){
-            throw new AppError(httpStatus.BAD_REQUEST,'Failed to update course!!')
-        }
+            if (!newPreRequisiteCourses) {
+                throw new AppError(httpStatus.BAD_REQUEST, 'Failed to update course!!')
+            }
 
         }
 
@@ -106,29 +106,34 @@ const deleteCourseFromDB = async (id: string) => {
     return result;
 };
 
-const assignFacultiesWithCourseIntoDB = async(id:string, payload:Partial<TCourseFaculty>)=>{
+const assignFacultiesWithCourseIntoDB = async (id: string, payload: Partial<TCourseFaculty>) => {
     const result = await CourseFaculty.findByIdAndUpdate(
         id,
         {
             course: id,
-            $addToSet: { faculties: { $each : payload} },
+            $addToSet: { faculties: { $each: payload } },
         },
         {
-            upsert:true,
-            new:true
+            upsert: true,
+            new: true
         },
     );
     return result;
 };
 
-const removeFacultiesFromCourseFromDB = async(id:string, payload:Partial<TCourseFaculty>)=>{
+const getFacultiesFromCourseFromDB = async (courseId: string,) => {
+    const result = await CourseFaculty.findOne({ course: courseId }).populate('faculties');
+    return result;
+};
+
+const removeFacultiesFromCourseFromDB = async (id: string, payload: Partial<TCourseFaculty>) => {
     const result = await CourseFaculty.findByIdAndUpdate(
         id,
         {
             $pull: { faculties: { $in: payload } }
         },
         {
-            new:true
+            new: true
         },
     );
     return result;
@@ -141,5 +146,6 @@ export const CourseServices = {
     updateCourseIntoDB,
     deleteCourseFromDB,
     assignFacultiesWithCourseIntoDB,
+    getFacultiesFromCourseFromDB,
     removeFacultiesFromCourseFromDB,
 }
