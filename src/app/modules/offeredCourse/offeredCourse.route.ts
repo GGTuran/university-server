@@ -36,4 +36,10 @@ router.delete(
     auth(USER_ROLE.superAdmin, USER_ROLE.admin),
     OfferedCourseControllers.deleteOfferedCourse);
 
+    router.get(
+        '/my-offered-courses',
+        auth(USER_ROLE.student),
+        OfferedCourseControllers.getMyOfferedCourse
+    )
+
 export const OfferedCourseRoutes = router;
