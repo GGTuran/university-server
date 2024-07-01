@@ -6,7 +6,7 @@ import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import notFoundError from './app/middlewares/notFoundError';
 import { UserRoutes } from './app/modules/user/user.route';
 import router from './app/routes';
-import  cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 
 
 const app: Application = express();
@@ -14,7 +14,10 @@ const app: Application = express();
 
 //Parsers
 app.use(express.json());
-app.use(cors({origin:['http://localhost:5173']}));
+app.use(cors({
+  origin: ['http://localhost:5173'],
+  credentials: true
+}));
 app.use(cookieParser());
 
 
@@ -22,7 +25,7 @@ app.use(cookieParser());
 
 // app.use('/api/v1/students', studentRoutes);
 // app.use('/api/v1/users', UserRoutes);
-app.use('/api/v1',router)
+app.use('/api/v1', router)
 
 
 app.get('/', (req: Request, res: Response) => {
