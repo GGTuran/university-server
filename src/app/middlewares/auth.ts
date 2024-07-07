@@ -16,7 +16,13 @@ const auth = (...requiredRoles: TUserRole[]) => {
         }
 
         //checking if the token is valid
-        const decoded = jwt.verify(token, config.JWT_ACCESS_SECRET as string) as JwtPayload;
+        let decoded;
+        try {
+            decoded = jwt.verify(token, config.JWT_ACCESS_SECRET as string) as JwtPayload;
+        } catch (error) {
+            throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized!!')
+        }
+         
         // const role = decoded.role;
         const { role, userId, iat } = decoded;
         const user = await User.isUserExistsByCustomId(userId);
