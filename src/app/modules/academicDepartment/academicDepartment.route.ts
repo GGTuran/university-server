@@ -7,7 +7,7 @@ import { USER_ROLE } from '../user/user.constatant';
 
 const router = express.Router();
 
-router.post('/create',
+router.post('/create/academicDepartment',
     auth(USER_ROLE.superAdmin, USER_ROLE.admin),
     validate(AcademicDepartmentValidation.createAcademicDepartmentZod),
     AcademicDepartmentController.createAcademicDepartment

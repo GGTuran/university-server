@@ -8,7 +8,7 @@ import { USER_ROLE } from '../user/user.constatant';
 const router = express.Router();
 
 router.post(
-    '/create-semester',
+    '/create-academic-semester',
     auth(USER_ROLE.superAdmin, USER_ROLE.admin),
     validate(academicSemesterValidation.academicSemesterZOdSchema),
     AcademicSemesterControllers.createAcademicSemester
